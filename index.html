@@ -98,10 +98,10 @@
 
     <div class="form-panel" id="formPanel">
       <form id="magnaForm" name="Magna Enquiry" method="POST"
-            action="https://usebasin.com/f/b9a8e738651e" novalidate autocomplete="on">
-        <!-- Hidden redirect to thank-you page -->
-        <input type="hidden" name="redirect" value="https://magna-money-form.vercel.app/thank-you.html">
+            action="https://script.google.com/macros/s/AKfycbzZ5sjDOAAzk0mw4rlWQLd-grKeHOlWEiNpl6dyqQvN90x2XIK47kb67rZdbSR_ghP7/exec"
+            novalidate autocomplete="on">
 
+        <input type="hidden" name="redirect" value="https://magna-money-form.vercel.app/thank-you.html">
         <!-- SECTION 1 -->
         <h3 class="section">Section 1: Business &amp; Contact Details</h3>
         <div class="field">
@@ -142,7 +142,6 @@
         <!-- SECTION 2 -->
         <h3 class="section">Section 2: Your Business Finance Requirements</h3>
 
-        <!-- Type of Finance -->
         <div class="field">
           <label>Type of Finance Required (select all that apply)</label>
           <div id="financeTypeError" class="small-note hidden">Please select at least one option.</div>
@@ -157,7 +156,6 @@
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Bridging Loan"> Bridging Loan</label>
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Development Finance"> Development Finance</label>
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Credit Insurance"> Credit Insurance</label>
-            <!-- Swapped order -->
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Buy to Let Mortgage / Remortgage" id="financeBTL"> Buy to Let Mortgage / Remortgage</label>
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Not Sure / Need Guidance"> Not Sure / Need Guidance</label>
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Buy to Let Auction Purchase" id="financeBTLAuction"> Buy to Let Auction Purchase</label>
@@ -165,11 +163,11 @@
           </div>
         </div>
 
-        <!-- reveal on "Other" finance -->
         <div id="financeOtherBlock" class="hidden field">
           <label for="otherFinanceDetails">Please specify (finance type)</label>
           <textarea id="otherFinanceDetails" name="Other Finance Details" placeholder="Please specify…"></textarea>
         </div>
+
         <div class="field">
           <label for="estimatedFunding">Estimated Funding Requirement (£)</label>
           <input id="estimatedFunding" name="Estimated Funding Requirement" type="text" placeholder="e.g. 250000">
@@ -180,7 +178,6 @@
           <textarea id="useOfFunds" name="Intended Use of Funds" placeholder="Please add as much detail as possible. This helps us and lenders understand your funding needs."></textarea>
         </div>
 
-        <!-- Length of Term -->
         <div class="field">
           <label>Length of Term: Over how long do you wish to repay any finance (select all that apply)</label>
           <div id="termError" class="small-note hidden">Please select at least one option.</div>
@@ -197,7 +194,6 @@
           </div>
         </div>
 
-        <!-- reveal on "Other" term -->
         <div id="termOtherBlock" class="hidden field">
           <label for="otherTermDetails">Please specify (term)</label>
           <textarea id="otherTermDetails" name="Other Term Details" placeholder="Please specify…"></textarea>
