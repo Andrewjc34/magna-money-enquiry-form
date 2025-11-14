@@ -3,149 +3,93 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Thank You – Magna Money</title>
+  <title>Thank You | MagnaMoney</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --charcoal: #1C1C1C;
-      --gold: #C6A76B;
-      --white: #FFFFFF;
-      --max-width: 800px;
-      --content-padding: 24px;
-    }
-    body {
-      margin: 0;
-      font-family: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: var(--charcoal);
-      color: var(--white);
-      padding: var(--content-padding);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      opacity: 0;
-      animation: fadeIn 1s forwards;
-    }
-    .container {
-      max-width: var(--max-width);
-      width: 100%;
-      background: linear-gradient(180deg, rgba(29,30,32,0.95), rgba(29,30,32,0.9));
-      border-radius: 12px;
-      padding: 40px 28px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.05);
-      text-align: center;
-    }
-    h1 {
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--gold);
-      margin-bottom: 12px;
-    }
-    p {
-      font-size: 16px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.9);
-      margin: 8px 0;
-    }
-    .countdown {
-      margin-top: 20px;
-      font-size: 15px;
-      color: rgba(255,255,255,0.7);
-    }
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 4px;
-      margin-top: 12px;
-      overflow: hidden;
-    }
-    .progress {
-      height: 100%;
-      width: 0%;
-      background: var(--gold);
-      box-shadow: 0 0 10px var(--gold), 0 0 20px var(--gold);
-      transition: width linear;
-      animation: glow 2s infinite alternate;
-    }
-    .btn {
-      display: inline-block;
-      margin-top: 24px;
-      background: var(--gold);
-      color: var(--white);
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-weight: 700;
-      text-decoration: none;
-      font-size: 16px;
-      box-shadow: 0 0 10px var(--gold), 0 0 20px var(--gold);
-      transition: background 0.2s ease;
-      animation: glow 2s infinite alternate;
-    }
-    .btn:hover {
-      background: #b9975f;
-    }
-    @keyframes glow {
-      from { box-shadow: 0 0 6px var(--gold), 0 0 12px var(--gold); }
-      to { box-shadow: 0 0 14px var(--gold), 0 0 28px var(--gold); }
-    }
-    @keyframes fadeIn { to { opacity: 1; } }
-    @keyframes fadeOut { to { opacity: 0; } }
-    @media (max-width: 768px) {
-      .container { padding: 28px 20px; }
-      h1 { font-size: 22px; }
-      p { font-size: 15px; }
-      .btn { font-size: 15px; padding: 10px 24px; }
-    }
-    @media (max-width: 480px) {
-      .container { padding: 24px 16px; }
-      h1 { font-size: 20px; }
-      p { font-size: 14px; }
-      .btn { font-size: 14px; padding: 10px 20px; }
-    }
+    /* (keep same CSS as your existing thank-you file) */
+    :root { --charcoal:#1C1C1C; --gold:#C6A76B; --text-main:#FFFFFF; --text-dim:rgba(255,255,255,0.8); }
+    body{margin:0;background:var(--charcoal);font-family:"Lato",sans-serif;color:var(--text-main);padding:24px;display:flex;justify-content:center}
+    .panel{max-width:900px;width:100%;background:rgba(29,30,32,0.95);border-radius:12px;padding:32px;text-align:center}
+    .thanks-headline{color:var(--gold);font-weight:700;font-size:20px;margin:12px 0}
+    .thanks-body{color:var(--text-dim);font-weight:300;margin-bottom:12px}
+    .progress-bar{width:100%;height:12px;background:rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),rgba(198,167,107,0.85));transition:width 0.2s linear}
+    .countdown{color:var(--text-dim);font-size:13px;margin-top:8px}
+    a.link{color:var(--gold)}
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Thank You for Your Enquiry</h1>
-    <p>We’ve received your details and will be in touch shortly.</p>
-    <p>To book your consultation, you’ll be redirected shortly.</p>
+  <div class="panel">
+    <div class="logo-wrap">
+      <div class="brand-name">MAGNAMONEY</div>
+    </div>
+    <div class="thanks-headline">Thank you — we've received your information</div>
+    <div class="thanks-body">Your details have been submitted securely. You will be redirected to book a time in a few seconds.</div>
 
-    <div class="countdown">Redirecting in <span id="timer">8</span> seconds…</div>
-    <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    <div style="max-width:440px;margin:18px auto;">
+      <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      <div id="countdownText" class="countdown">Redirecting to book a time in <strong>8</strong> seconds…</div>
+    </div>
 
-    <a id="bookBtn" href="#" class="btn">Book Now</a>
+    <div style="margin-top:14px;color:#fff;font-size:13px">
+      If the redirect doesn't happen automatically you can <a id="manualLink" class="link" href="#">click here to book now</a>.
+    </div>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get("name") || "";
-    const email = urlParams.get("email") || "";
-    const business = urlParams.get("business") || "";
+    // CONFIG - set your script exec URL here
+    const SCRIPT_EXEC_URL = 'REPLACE_WITH_YOUR_SCRIPT_EXEC_URL'; // e.g. https://script.google.com/macros/s/XXX/exec
+    const DEFAULT_HUBSPOT = 'https://meetings.hubspot.com/andrew-crutchley';
 
-    const hubspotUrl = `https://meetings.hubspot.com/andrew-crutchley?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&business=${encodeURIComponent(business)}`;
+    // read sid from querystring
+    function getParam(name) {
+      const url = new URL(location.href);
+      return url.searchParams.get(name);
+    }
+    const sid = getParam('sid');
 
-    document.getElementById("bookBtn").href = hubspotUrl;
+    // Countdown logic
+    (function(){
+      const total = 8; let remaining = total;
+      const fill = document.getElementById('progressFill');
+      const text = document.getElementById('countdownText');
+      let prefillUrl = null;
 
-    let seconds = 8;
-    const timerEl = document.getElementById("timer");
-    const progressEl = document.getElementById("progress");
+      // JSONP callback will set this
+      window.__magna_prefill_cb = function(payload){
+        if(payload && payload.prefillUrl) prefillUrl = payload.prefillUrl;
+      };
 
-    progressEl.style.transitionDuration = seconds + "s";
-    setTimeout(() => { progressEl.style.width = "100%"; }, 50);
-
-    const countdown = setInterval(() => {
-      seconds--;
-      timerEl.textContent = seconds;
-      if (seconds <= 0) {
-        clearInterval(countdown);
-        document.body.style.animation = "fadeOut 0.8s forwards";
-        setTimeout(() => {
-          window.location.href = hubspotUrl;
-        }, 800);
+      // request prefill via JSONP
+      if(sid && SCRIPT_EXEC_URL){
+        const script = document.createElement('script');
+        script.src = SCRIPT_EXEC_URL + '?sid=' + encodeURIComponent(sid) + '&callback=__magna_prefill_cb';
+        document.body.appendChild(script);
       }
-    }, 1000);
+
+      const tick = ()=>{
+        const pct = Math.round(((total - remaining) / total) * 100);
+        fill.style.width = pct + '%';
+        text.innerHTML = 'Redirecting to book a time in <strong>' + remaining + '</strong> second' + (remaining===1?'':'s') + '…';
+        if(remaining <= 0){
+          fill.style.width = '100%';
+          // final redirect
+          const target = prefillUrl || DEFAULT_HUBSPOT;
+          window.location.href = target;
+          return;
+        }
+        remaining--;
+        setTimeout(tick, 1000);
+      };
+      tick();
+
+      // manual click fallback
+      document.getElementById('manualLink').addEventListener('click', function(e){
+        e.preventDefault();
+        const target = prefillUrl || DEFAULT_HUBSPOT;
+        window.location.href = target;
+      });
+    })();
   </script>
 </body>
 </html>
