@@ -27,7 +27,7 @@
     }
     .container { max-width: var(--max-width); width:100%; margin:0 auto; }
 
-    /* Header */
+    /* ===== Header (matched to Engagement/Proposal) ===== */
     .header-block { text-align:center; margin-bottom:14px; }
     .logo-wrap { display:inline-flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:12px; }
     .crown-logo {
@@ -36,13 +36,19 @@
       background-image:url("https://magna-money-enquiry-form.neocities.org/Magna%20Money%20logo_full_colour.png");
       filter:drop-shadow(0 4px 12px var(--gold-shadow));
     }
-    .brand-name { color:var(--white); font-weight:700; font-size:18px; line-height:1.2; letter-spacing:0.05em; margin-top:12px; text-transform:uppercase; }
-    .brand-tag { color:var(--gold); font-size:13px; font-weight:400; margin-top:6px; text-align:center; max-width:540px; }
+    .brand-name {
+      color:var(--white); font-weight:700; font-size:18px; line-height:1.2;
+      letter-spacing:0.05em; margin-top:12px; text-transform:uppercase;
+    }
+    .brand-tag {
+      color:var(--gold); font-size:13px; font-weight:400; margin-top:6px;
+      text-align:center; max-width:540px;
+    }
     .doc-title { font-weight:700; font-size:20px; margin:16px 0 2px; text-align:center; color:var(--white); }
     .website-line { color:var(--gold); font-weight:600; margin-top:6px; font-size:14px; text-align:center; }
     .intro { color:var(--white); opacity:0.95; font-weight:300; margin:12px auto 18px; line-height:1.4; max-width:920px; text-align:center; }
 
-    /* Panel / Form */
+    /* ===== Panel / Form ===== */
     .form-panel {
       background: linear-gradient(180deg, rgba(29,30,32,0.95), rgba(29,30,32,0.9));
       border-radius:12px;
@@ -51,6 +57,7 @@
       border:1px solid rgba(255,255,255,0.03);
     }
     h3.section { margin:12px 0 12px; font-size:16px; color:var(--white); font-weight:700; }
+    .subtext { font-size:13px; color: rgba(255,255,255,0.65); margin-top:6px; }
     .row { display:flex; gap:16px; flex-wrap:wrap; }
     .col { flex: 1 1 280px; min-width:220px; }
     label { display:block; font-weight:400; margin-bottom:8px; color:var(--white); }
@@ -62,6 +69,8 @@
     .field { margin-bottom:14px; }
     .choice-list { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
     .choice-item { display:flex; align-items:center; gap:10px; color:var(--white); }
+    .choice-item input { width:auto; }
+    .radio-row { display:flex; gap:12px; flex-wrap:wrap; }
     .small-note { font-size:13px; color: rgba(255,255,255,0.75); }
     .submit-row { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:12px; flex-wrap:wrap; }
     .btn { background: var(--gold); color: var(--white); border:none; padding:12px 32px; border-radius:8px; font-weight:700; cursor:pointer; box-shadow: 0 8px 22px rgba(198,167,107,0.12); font-size:16px; }
@@ -92,6 +101,7 @@
             action="https://script.google.com/macros/s/AKfycby8Zv4WLTcElTcQjKHVcVORIQ8m5t5-5OXpJkxMuA0O6E8DCAV2iQIbqwHF6OwfvpFB/exec"
             target="magnaTarget" novalidate autocomplete="on">
 
+        <input type="hidden" name="redirect" value="https://magna-money-form.vercel.app/thank-you.html">
         <!-- SECTION 1 -->
         <h3 class="section">Section 1: Business &amp; Contact Details</h3>
         <div class="field">
@@ -131,6 +141,7 @@
 
         <!-- SECTION 2 -->
         <h3 class="section">Section 2: Your Business Finance Requirements</h3>
+
         <div class="field">
           <label>Type of Finance Required (select all that apply)</label>
           <div id="financeTypeError" class="small-note hidden">Please select at least one option.</div>
@@ -138,34 +149,54 @@
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Unsecured Loan"> Unsecured Loan</label>
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Secured Loan"> Secured Loan</label>
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="HMRC Loan"> HMRC Loan</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Merchant Cash Advance (MCA)"> Merchant Cash Advance</label>
             <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Invoice Finance"> Invoice Finance</label>
-            <label class="choice-item"><input type="checkbox" id="financeOtherChk" name="Type of Finance" value="Other"> Other</label>
-            <div id="financeOtherBlock" class="hidden field">
-              <label for="financeOtherText">Please specify</label>
-              <input id="financeOtherText" name="Finance Other Details" type="text" placeholder="Please specify…">
-            </div>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Asset/Vehicle/Car Stock Finance"> Asset/Vehicle/Car Stock Finance</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Commercial Mortgage"> Commercial Mortgage</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Bridging Loan"> Bridging Loan</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Development Finance"> Development Finance</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Credit Insurance"> Credit Insurance</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Buy to Let Mortgage / Remortgage" id="financeBTL"> Buy to Let Mortgage / Remortgage</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Not Sure / Need Guidance"> Not Sure / Need Guidance</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Buy to Let Auction Purchase" id="financeBTLAuction"> Buy to Let Auction Purchase</label>
+            <label class="choice-item"><input type="checkbox" name="Type of Finance" value="Other" id="financeOtherChk"> Other</label>
           </div>
         </div>
 
-        <div class="field">
-          <label>Approx amount of finance required (£)</label>
-          <input name="Amount Required" type="text" placeholder="e.g. 25000">
+        <div id="financeOtherBlock" class="hidden field">
+          <label for="otherFinanceDetails">Please specify (finance type)</label>
+          <textarea id="otherFinanceDetails" name="Other Finance Details" placeholder="Please specify…"></textarea>
         </div>
 
         <div class="field">
-          <label>Preferred length of term</label>
-          <div id="termError" class="small-note hidden">Please pick at least one term.</div>
-          <div class="choice-list">
-            <label class="choice-item"><input type="radio" name="Length of Term" value="6 months"> 6 months</label>
-            <label class="choice-item"><input type="radio" name="Length of Term" value="12 months"> 12 months</label>
-            <label class="choice-item"><input type="radio" name="Length of Term" value="24 months"> 24 months</label>
-            <label class="choice-item"><input type="radio" name="Length of Term" value="36 months"> 36 months</label>
-            <label class="choice-item"><input type="radio" id="termOtherChk" name="Length of Term" value="Other"> Other</label>
-            <div id="termOtherBlock" class="hidden field">
-              <label for="otherTermDetails">Please specify (term)</label>
-              <textarea id="otherTermDetails" name="Other Term Details" placeholder="Please specify…"></textarea>
-            </div>
+          <label for="estimatedFunding">Estimated Funding Requirement (£)</label>
+          <input id="estimatedFunding" name="Estimated Funding Requirement" type="text" placeholder="e.g. 250000">
+        </div>
+
+        <div class="field">
+          <label for="useOfFunds">Intended Use of Funds</label>
+          <textarea id="useOfFunds" name="Intended Use of Funds" placeholder="Please add as much detail as possible. This helps us and lenders understand your funding needs."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Length of Term: Over how long do you wish to repay any finance (select all that apply)</label>
+          <div id="termError" class="small-note hidden">Please select at least one option.</div>
+          <div class="choice-list" id="termGroup">
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="Under 6 months"> Under 6 months</label>
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="6–12 months"> 6–12 months</label>
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="1 year"> 1 year</label>
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="2 years"> 2 years</label>
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="3 years"> 3 years</label>
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="4 years"> 4 years</label>
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="5 years +"> 5 years +</label>
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="Not Sure / Need Guidance"> Not Sure / Need Guidance</label>
+            <label class="choice-item"><input type="checkbox" name="Length of Term" value="Other" id="termOtherChk"> Other</label>
           </div>
+        </div>
+
+        <div id="termOtherBlock" class="hidden field">
+          <label for="otherTermDetails">Please specify (term)</label>
+          <textarea id="otherTermDetails" name="Other Term Details" placeholder="Please specify…"></textarea>
         </div>
 
         <hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:12px 0">
@@ -319,11 +350,32 @@
 
         <hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:12px 0">
 
-        <!-- SECTION 6: Additional information -->
-        <h3 class="section">Section 6: Additional information</h3>
+        <!-- SECTION 6 -->
+        <h3 class="section">Section 6: Final Details</h3>
+        <div class="row">
+          <div class="col field">
+            <label for="contactMethod">Preferred Contact Method</label>
+            <select id="contactMethod" name="Preferred Contact Method">
+              <option value="">Please choose...</option>
+              <option>Phone</option>
+              <option>Email</option>
+              <option>Zoom / Video Call</option>
+            </select>
+          </div>
+          <div class="col field">
+            <label for="bestTime">Best time to contact</label>
+            <select id="bestTime" name="Best Time to Contact">
+              <option value="">Please choose...</option>
+              <option>Morning</option>
+              <option>Afternoon</option>
+              <option>Evening</option>
+            </select>
+          </div>
+        </div>
+
         <div class="field">
-          <label for="additionalInfo">Anything else we should know?</label>
-          <textarea id="additionalInfo" name="Additional Information" placeholder="Tell us anything else that will help…"></textarea>
+          <label for="anythingElse">Anything else you'd like to share?</label>
+          <textarea id="anythingElse" name="Anything Else" placeholder="Include any background or context that might help us understand your funding requirements."></textarea>
         </div>
 
         <div class="field gdpr"><strong>Data privacy notice</strong><div style="height:8px"></div>We collect the information you provide to assess your finance enquiry and will process it in line with our privacy policy. By submitting this form you consent to the processing of your data for the purposes of assessing and progressing your enquiry.</div>
@@ -342,7 +394,7 @@
     </div> <!-- end form-panel -->
   </div> <!-- end container -->
 
-  <!-- hidden target for form submits (required) -->
+ <!-- hidden target for form submits (required) -->
   <iframe name="magnaTarget" style="display:none" aria-hidden="true"></iframe>
 
   <script>
