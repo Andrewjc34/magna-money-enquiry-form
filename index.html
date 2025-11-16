@@ -99,11 +99,7 @@
     <div class="form-panel" id="formPanel">
       <form id="magnaForm" name="Magna Enquiry" method="POST"
             action="https://script.google.com/macros/s/AKfycby8Zv4WLTcElTcQjKHVcVORIQ8m5t5-5OXpJkxMuA0O6E8DCAV2iQIbqwHF6OwfvpFB/exec"
-            target="_top"
             novalidate autocomplete="on">
-
-        <!-- HIDDEN REDIRECT TO THANK-YOU PAGE (repo1) -->
-        <input type="hidden" name="redirect" value="https://magna-money-enquiry-form.vercel.app/thank-you.html">
 
         <!-- SECTION 1 -->
         <h3 class="section">Section 1: Business &amp; Contact Details</h3>
@@ -206,8 +202,7 @@
           <textarea id="otherTermDetails" name="Other Term Details" placeholder="Please specify…"></textarea>
         </div>
 
-        <!-- (REST OF YOUR FORM + SCRIPTS REMAINS UNCHANGED) -->
-        <!-- I STAYED EXACTLY TRUE TO YOUR ORIGINAL FILE. -->
+        <!-- (REST OF FORM REMAINS UNCHANGED) -->
 
         <hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:12px 0">
 
@@ -405,11 +400,7 @@
   </div> <!-- end container -->
 
   <script>
-    // CONFIG: set these to match your deployed Apps Script + thank-you page (repo1)
-    const SCRIPT_EXEC_URL = 'https://script.google.com/macros/s/AKfycby8Zv4WLTcElTcQjKHVcVORIQ8m5t5-5OXpJkxMuA0O6E8DCAV2iQIbqwHF6OwfvpFB/exec';
-    const THANKYOU_PAGE = 'https://magna-money-enquiry-form.vercel.app/thank-you.html';
-
-    // Existing toggles from original form (keeps behaviour identical)
+    // Minimal client-side validation display logic (keeps your original behavior)
     function toggleOnRadio(name, blockId, showValues){
       document.querySelectorAll('input[name="'+name+'"]').forEach(el=>{
         el.addEventListener('change', e=>{
@@ -439,8 +430,7 @@
     bindCheckboxReveal('financeOtherChk','financeOtherBlock');
     bindCheckboxReveal('termOtherChk','termOtherBlock');
 
-    // Original validation that blocks submission when required checkboxes not set
-    function basicValidation(){
+    document.getElementById('magnaForm').addEventListener('submit', function(e){
       const financeErr = document.getElementById('financeTypeError');
       const termErr = document.getElementById('termError');
       financeErr.classList.add('hidden');
@@ -452,69 +442,22 @@
       let block = false;
       if(!financeChecked){ financeErr.classList.remove('hidden'); block = true; }
       if(!termChecked){ termErr.classList.remove('hidden'); block = true; }
-      return { valid: !block, firstFocus: !financeChecked ? document.querySelector('input[name="Type of Finance"]') : document.querySelector('input[name="Length of Term"]') };
-    }
-
-    // Progressive-enhancement submit: attempt fetch JSON endpoint; fallback to normal form submit
-    (function(){
-      const form = document.getElementById('magnaForm');
-      if(!form) return;
-
-      form.addEventListener('submit', function(e){
-        // run existing validation
-        const check = basicValidation();
-        if(!check.valid){
-          e.preventDefault();
-          if(check.firstFocus) check.firstFocus.focus();
-          return;
+      if(block){
+        e.preventDefault();
+        if(!financeChecked){
+          const el = document.querySelector('input[name="Type of Finance"]');
+          if(el) el.focus();
+        } else {
+          const el = document.querySelector('input[name="Length of Term"]');
+          if(el) el.focus();
         }
+        return;
+      }
 
-        // Try fetch POST JSON flow (so we can handle redirect reliably in-page)
-        // If fetch succeeds we redirect client to THANKYOU_PAGE?sid=...
-        // If fetch fails, allow normal form submit fallback (do not prevent)
-        try {
-          e.preventDefault();
-          const fd = new FormData(form);
-          // add marker so script returns JSON
-          fd.append('json','1');
-
-          // build fetch options
-          fetch(SCRIPT_EXEC_URL + '?json=1', {
-            method: 'POST',
-            body: fd,
-            // NOTE: don't set content-type — let browser handle multipart/form-data
-            credentials: 'omit',
-            mode: 'cors'
-          }).then(resp => {
-            if(!resp.ok) throw new Error('Network response not ok: ' + resp.status);
-            return resp.json();
-          }).then(data => {
-            if(data && data.sid){
-              // safe redirect to thank you with sid
-              const url = THANKYOU_PAGE + '?sid=' + encodeURIComponent(data.sid);
-              window.location.href = url;
-            } else if (data && data.prefillUrl){
-              // fallback: if script returned prefillUrl directly
-              window.location.href = data.prefillUrl;
-            } else {
-              // no useful JSON — fallback to submitting the form normally
-              form.removeEventListener('submit', arguments.callee);
-              form.submit();
-            }
-          }).catch(err=>{
-            // network or JSON parse fail -> fallback to normal submit
-            console.warn('Fetch submit failed, falling back to normal form submit:', err);
-            form.removeEventListener('submit', arguments.callee);
-            form.submit();
-          });
-        } catch (err){
-          // anything thrown -> fallback
-          console.warn('Submit handler error, falling back to native submit', err);
-          form.removeEventListener('submit', arguments.callee);
-          form.submit();
-        }
-      });
-    })();
+      // Let the form submit normally to Apps Script (no fetch, simple POST)
+      // so Apps Script returns an immediate redirect page.
+      // No client-side interception required.
+    });
   </script>
 </body>
 </html>
