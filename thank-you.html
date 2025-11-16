@@ -60,19 +60,14 @@
     .contact-block { margin-top:16px; font-size:14px; line-height:1.5; color:var(--text-main); font-weight:400; }
     .footer-line { margin-top:24px; font-size:13px; line-height:1.4; color:var(--text-faint); }
 
-    .prefill-note { margin-top:10px; font-size:13px; color:var(--text-dim); }
-    .details { margin-top:10px; font-size:14px; color:var(--text-main); }
-
-    .btn-inline { display:inline-block; margin-top:12px; background:var(--gold); color:var(--charcoal); padding:10px 18px; border-radius:8px; font-weight:700; text-decoration:none; cursor:pointer; }
-
     @media (max-width:640px){ .thanks-headline{ font-size:18px; } .thanks-body{ font-size:14px; } }
   </style>
 </head>
 <body>
   <div class="page-wrap">
-    <div class="panel" id="panelRoot" role="main" aria-live="polite">
-      <div class="logo-wrap" aria-hidden="true">
-        <div class="crown-logo"></div>
+    <div class="panel">
+      <div class="logo-wrap">
+        <div class="crown-logo" aria-hidden="true"></div>
         <div class="brand-name">MAGNAMONEY</div>
         <div class="brand-tag">The Commercial Finance Boutique – Bespoke, Collaborative &amp; Expert Funding Advisory</div>
       </div>
@@ -83,19 +78,12 @@
         Your details have been submitted securely. I’ll review everything and come back to you quickly with next steps.
       </div>
 
-      <div class="progress-wrap" aria-hidden="false">
+      <div class="progress-wrap">
         <div class="progress-bar" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
-        <div id="countdownText" class="countdown">Redirecting to book a time in <strong id="countNum">8</strong> seconds…</div>
+        <div id="countdownText" class="countdown">Redirecting to book a time in <strong>8</strong> seconds…</div>
       </div>
 
-      <div id="prefillNote" class="prefill-note" style="display:none"></div>
-      <div id="prefillDetails" class="details" style="display:none"></div>
-
-      <div style="margin-top:14px">
-        <a id="goNow" class="btn-inline" role="button">Book now / go to calendar</a>
-      </div>
-
-      <div class="contact-block" style="margin-top:18px">
+      <div class="contact-block">
         <div><strong>Questions right now?</strong></div>
         <div>Speak directly with Andrew Crutchley</div>
         <div>07377&nbsp;018&nbsp;238</div>
@@ -108,151 +96,63 @@
   </div>
 
   <script>
-    // --------------- CONFIG - update only these if you want a different endpoint / meeting link ---------------
-    // Apps Script exec URL (used for JSONP prefill lookup when ?sid= is present)
-    const SCRIPT_EXEC_URL = 'https://script.google.com/macros/s/AKfycby8Zv4WLTcElTcQjKHVcVORIQ8m5t5-5OXpJkxMuA0O6E8DCAV2iQIbqwHF6OwfvpFB/exec';
+    // CONFIG: hubspot meeting URL (uses the UUID you confirmed)
+    const HUBSPOT_MEETINGS = 'https://meetings.hubspot.com/andrew-crutchley?uuid=9b293836-ef65-4198-b7fd-9d02328677d6';
 
-    // Default HubSpot meetings URL (will be used if no prefill mapping is available)
-    const HUBSPOT_MEETINGS = 'https://meetings.hubspot.com/andrew-crutchley?uuid=aded191f-6b81-472b-ba9a-c77a1b41487e';
-    // --------------------------------------------------------------------------------------------------------
-
-    // Utility: get query params
-    function getQueryParams() {
-      const q = {};
-      const raw = location.search.replace(/^\?/, '');
-      if (!raw) return q;
-      raw.split('&').forEach(part => {
-        const [k,v] = part.split('=');
-        if (!k) return;
-        q[decodeURIComponent(k)] = v ? decodeURIComponent(v.replace(/\+/g,' ')) : '';
-      });
+    // Read optional query params (firstname, lastname, email) if present — we only use them for display or future extension.
+    function getQueryParams(){
+      var q = {};
+      try {
+        var pairs = (location.search[0] === '?' ? location.search.substr(1) : location.search).split('&');
+        for(var i=0;i<pairs.length;i++){
+          if(!pairs[i]) continue;
+          var kv = pairs[i].split('=');
+          q[decodeURIComponent(kv[0])] = kv[1] ? decodeURIComponent(kv[1]) : '';
+        }
+      } catch(e){ /* ignore */ }
       return q;
     }
 
-    // Extract query params from a full URL
-    function extractParamsFromUrl(url){
-      try {
-        const u = new URL(url);
-        const obj = {};
-        for (const [k,v] of u.searchParams.entries()) obj[k] = v;
-        return obj;
-      } catch(e) {
-        // fallback simple parse
-        const idx = url.indexOf('?');
-        if (idx < 0) return {};
-        const qs = url.substr(idx+1);
-        const out = {};
-        qs.split('&').forEach(p => {
-          const [k,v] = p.split('=');
-          if (!k) return;
-          out[decodeURIComponent(k)] = v ? decodeURIComponent(v) : '';
-        });
-        return out;
-      }
-    }
-
-    // Update UI with any available name/email details
-    function showPrefillDetails(first, last, email){
-      const note = document.getElementById('prefillNote');
-      const details = document.getElementById('prefillDetails');
-      if (first || last || email){
-        note.style.display = 'block';
-        note.textContent = 'We will try to pre-fill your booking page with the details you provided.';
-        details.style.display = 'block';
-        details.innerHTML = '<strong>Your booking details</strong><div style="margin-top:6px">' +
-                            (first ? ('First name: ' + escapeHtml(first) + '<br/>') : '') +
-                            (last  ? ('Surname: ' + escapeHtml(last) + '<br/>') : '') +
-                            (email ? ('Email: ' + escapeHtml(email) + '<br/>') : '') +
-                            '</div>';
-      }
-    }
-
-    // Safe HTML escape
-    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; }); }
-
-    // Primary redirect target (default)
-    let redirectTarget = HUBSPOT_MEETINGS;
-
-    // Attempt to fetch prefill mapping from Apps Script if sid present (JSONP)
-    (function initPrefill(){
-      const q = getQueryParams();
-      // If the form-provided fields are provided directly via query params (rare), show them
-      if (q.firstname || q.lastname || q.email) {
-        showPrefillDetails(q.firstname, q.lastname, q.email);
-      }
-
-      // If script wrote a mapping and redirected with ?sid=..., use JSONP to fetch prefillUrl
-      if (q.sid) {
-        // JSONP callback name
-        const cbName = 'magnaPrefillCB_' + (new Date()).getTime();
-        window[cbName] = function(result){
-          try {
-            if (result && result.prefillUrl){
-              // If we have a stored prefill URL, use it as redirect target and extract names to show
-              redirectTarget = result.prefillUrl;
-              const p = extractParamsFromUrl(result.prefillUrl);
-              showPrefillDetails(p.firstname || p.firstname || p.first || p.first_name || '', p.lastname || p.last || p.surname || '', p.email || '');
-              // update the "Book now" link href
-              setBookNowLink(redirectTarget);
-            }
-          } catch(e){
-            // ignore
-          } finally {
-            // cleanup script tag and callback
-            try { delete window[cbName]; }catch(e){}
-            const s = document.getElementById(cbName + '_s'); if (s) s.remove();
-          }
-        };
-        // inject script tag for JSONP
-        const script = document.createElement('script');
-        script.src = SCRIPT_EXEC_URL + '?sid=' + encodeURIComponent(q.sid) + '&callback=' + cbName;
-        script.id = cbName + '_s';
-        script.onerror = function(){ try{ delete window[cbName]; }catch(e){} };
-        document.head.appendChild(script);
-      } else {
-        // No sid; keep redirectTarget as default (HUBSPOT_MEETINGS)
-        setBookNowLink(redirectTarget);
-      }
-    })();
-
-    // Set the immediate book link
-    function setBookNowLink(url){
-      const go = document.getElementById('goNow');
-      go.setAttribute('href', url);
-      go.setAttribute('role','link');
-      go.onclick = function(e){ e.preventDefault(); window.location.href = url; };
-    }
-
-    // Countdown + progress logic
-    (function startCountdown(){
-      const total = 8;
-      let remaining = total;
+    // Countdown logic (8 seconds)
+    (function(){
+      const total = 8; let remaining = total;
       const fill = document.getElementById('progressFill');
-      const num = document.getElementById('countNum');
       const text = document.getElementById('countdownText');
 
-      // ensure goNow link has href set (may be updated later by JSONP)
-      setBookNowLink(redirectTarget);
+      // If query params exist we could show a tiny personalised message (optional)
+      const qp = getQueryParams();
+      if(qp.firstname || qp.lastname){
+        // small non-invasive personalization (does not change any flow)
+        const name = (qp.firstname || '') + (qp.lastname ? (' ' + qp.lastname) : '');
+        if(name.trim()) {
+          const p = document.createElement('div');
+          p.style.marginTop = '10px';
+          p.style.fontSize = '14px';
+          p.style.color = 'var(--text-dim)';
+          p.textContent = 'Thanks, ' + name + '. You will be taken to my diary shortly.';
+          document.querySelector('.panel').insertBefore(p, document.querySelector('.progress-wrap').nextSibling);
+        }
+      }
 
       const tick = ()=>{
         const pct = Math.round(((total - remaining) / total) * 100);
-        if (fill) fill.style.width = pct + '%';
-        if (num) num.textContent = remaining;
-        if (remaining <= 0){
-          if (fill) fill.style.width = '100%';
-          // final redirect (use latest redirectTarget)
-          try { window.location.href = redirectTarget; } catch(e){}
+        fill.style.width = pct + '%';
+        text.innerHTML = 'Redirecting to book a time in <strong>' + remaining + '</strong> second' + (remaining === 1 ? '' : 's') + '…';
+        if(remaining <= 0){
+          // final fill
+          fill.style.width = '100%';
+          // perform the redirect
+          window.location.href = HUBSPOT_MEETINGS;
           return;
         }
         remaining--;
         setTimeout(tick, 1000);
       };
-      // Allow user to click anywhere on panel to go immediately
-      document.getElementById('panelRoot').addEventListener('click', function(){ window.location.href = redirectTarget; });
-      // Start countdown
+      // Start
       tick();
+      // Allow user to click anywhere on page to go immediately
+      document.body.addEventListener('click', ()=> window.location.href = HUBSPOT_MEETINGS);
     })();
-
   </script>
 </body>
 </html>
